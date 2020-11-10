@@ -12,12 +12,33 @@ repositories {
         url "https://kotlin.bintray.com/kotlinx/"
     }
 }
+
+configurations {
+    invoker
+}
+
 dependencies {
     implementation "com.github.javafaker:javafaker:1.0.2"
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1"
     implementation "org.jetbrains.kotlinx:kotlinx-datetime:0.1.0"
+    implementation "com.google.cloud.functions:functions-framework-api:1.0.2"
+    invoker "com.google.cloud.functions.invoker:java-function-invoker:1.0.0"
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
 }
+
 compileKotlin {
     kotlinOptions.jvmTarget = '11'
+}
+
+tasks.register("runFunction", JavaExec) {
+    main = 'com.google.cloud.functions.invoker.runner.Invoker'
+    classpath(configurations.invoker)
+    inputs.files(configurations.runtimeClasspath, sourceSets.main.output)
+    args(
+            '--target', project.findProperty('runFunction.target') ?: '',
+            '--port', project.findProperty('runFunction.port') ?: 8080
+    )
+    doFirst {
+        args('--classpath', files(configurations.runtimeClasspath, sourceSets.main.output).asPath)
+    }
 }
