@@ -1,14 +1,17 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.4.10'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.10'
 }
 group = 'io.kraftsman'
 version = '1.0-SNAPSHOT'
 
 repositories {
+    jcenter()
     mavenCentral()
 }
 dependencies {
     implementation "com.github.javafaker:javafaker:1.0.2"
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1"
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit'
 }
 compileKotlin {
